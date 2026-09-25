@@ -58,6 +58,9 @@
         },
         "serve": {
           "builder": "@angular/build:dev-server",
+          "options": {
+            "port": 1522
+          },
           "configurations": {
             "production": {
               "buildTarget": "pharma-frontend:build:production"
