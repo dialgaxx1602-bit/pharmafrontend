@@ -1,0 +1,41 @@
+<section class="page">
+  <header class="page-header">
+    <h2>Clientes</h2>
+    <a routerLink="nuevo" class="btn btn-primary">+ Nuevo cliente</a>
+  </header>
+  <input class="input buscador" placeholder="Buscar por nombre o documento…"
+    [value]="filtro()" (input)="filtro.set($any($event.target).value)" />
+  @if (error()) {
+    <div class="alerta">{{ error() }}</div>
+  }
+  @if (cargando()) {
+    <p>Cargando clientes…</p>
+  } @else {
+    <table class="tabla">
+      <thead>
+        <tr><th>ID</th><th>Nombre</th><th>Tipo Doc.</th><th>N° Doc.</th><th>Teléfono</th><th>Email</th><th>Estado</th><th>Acciones</th></tr>
+      </thead>
+      <tbody>
+        @for (c of filtrados(); track c.id) {
+          <tr>
+            <td>{{ c.id }}</td>
+            <td>{{ c.nombre }}</td>
+            <td>{{ c.tipoDoc }}</td>
+            <td>{{ c.numDoc }}</td>
+            <td>{{ c.telefono ?? '—' }}</td>
+            <td>{{ c.email ?? '—' }}</td>
+            <td>
+              <span class="badge" [class.inactivo]="!c.estado">{{ c.estado ? 'Activo' : 'Inactivo' }}</span>
+            </td>
+            <td class="acciones">
+              <a [routerLink]="[c.id, 'editar']" class="btn">Editar</a>
+              <button type="button" class="btn btn-peligro" (click)="eliminar(c)">Eliminar</button>
+            </td>
+          </tr>
+        } @empty {
+          <tr><td colspan="8" class="vacio">No hay clientes registrados.</td></tr>
+        }
+      </tbody>
+    </table>
+  }
+</section>

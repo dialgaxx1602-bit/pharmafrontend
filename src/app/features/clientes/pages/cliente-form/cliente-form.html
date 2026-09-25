@@ -1,0 +1,67 @@
+<section class="page">
+  <h2>{{ esEdicion() ? 'Editar cliente' : 'Nuevo cliente' }}</h2>
+  @if (error()) {
+    <div class="alerta">{{ error() }}</div>
+  }
+  <form [formGroup]="form" (ngSubmit)="guardar()" class="card formulario">
+    <label>
+      Nombre Completo / Razón Social
+      <input class="input" formControlName="nombre" />
+    </label>
+    @if (form.controls.nombre.touched && form.controls.nombre.invalid) {
+      <small class="error">El nombre es obligatorio (mínimo 3 caracteres).</small>
+    }
+    @if (erroresServidor()['nombre']; as mensaje) {
+      <small class="error">{{ mensaje }}</small>
+    }
+
+    <div class="grid-2">
+      <label>
+        Tipo Documento
+        <select class="input" formControlName="tipoDoc">
+          <option value="DNI">DNI</option>
+          <option value="RUC">RUC</option>
+          <option value="CE">Carnet Extranjería</option>
+          <option value="PASAPORTE">Pasaporte</option>
+        </select>
+      </label>
+
+      <label>
+        N° Documento
+        <input class="input" formControlName="numDoc" />
+      </label>
+    </div>
+    @if (form.controls.numDoc.touched && form.controls.numDoc.invalid) {
+      <small class="error">El número de documento es obligatorio (8 a 15 caracteres).</small>
+    }
+    @if (erroresServidor()['numDoc']; as mensaje) {
+      <small class="error">{{ mensaje }}</small>
+    }
+
+    <div class="grid-2">
+      <label>
+        Teléfono
+        <input class="input" formControlName="telefono" />
+      </label>
+
+      <label>
+        Email
+        <input class="input" type="email" formControlName="email" />
+      </label>
+    </div>
+    @if (form.controls.email.touched && form.controls.email.invalid) {
+      <small class="error">Ingrese un correo electrónico válido.</small>
+    }
+
+    <label class="check">
+      <input type="checkbox" formControlName="estado" /> Activo
+    </label>
+
+    <div class="acciones">
+      <a routerLink="/clientes" class="btn">Cancelar</a>
+      <button type="submit" class="btn btn-primary" [disabled]="guardando()">
+        {{ guardando() ? 'Guardando…' : (esEdicion() ? 'Actualizar' : 'Registrar') }}
+      </button>
+    </div>
+  </form>
+</section>
