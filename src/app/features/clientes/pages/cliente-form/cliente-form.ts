@@ -24,11 +24,12 @@ export class ClienteForm implements OnInit {
   protected readonly erroresServidor = signal<Record<string, string>>({});
 
   protected readonly form = this.fb.group({
-    nombre: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
-    tipoDoc: ['DNI', [Validators.required]],
-    numDoc: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(15)]],
-    telefono: ['', [Validators.maxLength(20)]],
-    email: ['', [Validators.email, Validators.maxLength(100)]],
+    dni: ['', [Validators.required, Validators.pattern(/^\d{8}$/)]],
+    nombres: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
+    apellidos: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
+    email: ['', [Validators.required, Validators.email, Validators.maxLength(150)]],
+    telefono: ['', [Validators.pattern(/^\d{9}$/)]],
+    direccion: ['', [Validators.maxLength(250)]],
     estado: [true],
   });
 
@@ -40,14 +41,16 @@ export class ClienteForm implements OnInit {
     const id = this.id();
     if (id) {
       this.clienteService.obtener(Number(id)).subscribe({
-        next: c => this.form.setValue({
-          nombre: c.nombre,
-          tipoDoc: c.tipoDoc,
-          numDoc: c.numDoc,
-          telefono: c.telefono ?? '',
-          email: c.email ?? '',
-          estado: c.estado,
-        }),
+        next: c =>
+          this.form.setValue({
+            dni: c.dni,
+            nombres: c.nombres,
+            apellidos: c.apellidos,
+            email: c.email,
+            telefono: c.telefono ?? '',
+            direccion: c.direccion ?? '',
+            estado: c.estado,
+          }),
         error: (err: HttpErrorResponse) => this.error.set(mensajeError(err)),
       });
     }
@@ -58,14 +61,15 @@ export class ClienteForm implements OnInit {
       this.form.markAllAsTouched();
       return;
     }
-    const valores = this.form.getRawValue();
+    const v = this.form.getRawValue();
     const dto: ClienteRequest = {
-      nombre: valores.nombre.trim(),
-      tipoDoc: valores.tipoDoc.trim(),
-      numDoc: valores.numDoc.trim(),
-      telefono: valores.telefono.trim() || null,
-      email: valores.email.trim() || null,
-      estado: valores.estado,
+      dni: v.dni.trim(),
+      nombres: v.nombres.trim(),
+      apellidos: v.apellidos.trim(),
+      email: v.email.trim(),
+      telefono: v.telefono.trim() || null,
+      direccion: v.direccion.trim() || null,
+      estado: v.estado,
     };
     const id = this.id();
     const peticion = id
@@ -73,6 +77,9 @@ export class ClienteForm implements OnInit {
       : this.clienteService.crear(dto);
 
     this.guardando.set(true);
+    this.error.set(null);
+    this.erroresServidor.set({});
+
     peticion.subscribe({
       next: () => this.router.navigate(['/clientes']),
       error: (err: HttpErrorResponse) => {
@@ -83,3 +90,4 @@ export class ClienteForm implements OnInit {
     });
   }
 }
+

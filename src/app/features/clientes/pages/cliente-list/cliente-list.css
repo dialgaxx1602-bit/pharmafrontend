@@ -1,3 +1,11 @@
-.buscador { max-width: 320px; margin-bottom: 16px; }
+.toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; gap: 16px; }
+.buscador { flex: 1; max-width: 360px; }
+.selector-tamanio { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; }
+.selector-tamanio select { width: auto; padding: 4px 8px; }
+.sortable { cursor: pointer; user-select: none; }
+.sortable:hover { background-color: rgba(0, 0, 0, 0.05); }
 .acciones { display: flex; gap: 8px; }
 .vacio { text-align: center; color: #6b7280; padding: 24px; }
+.paginacion-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; font-size: 0.9rem; }
+.paginacion-botones { display: flex; gap: 8px; }
+

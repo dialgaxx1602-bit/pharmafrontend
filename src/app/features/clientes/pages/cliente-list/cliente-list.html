@@ -3,27 +3,52 @@
     <h2>Clientes</h2>
     <a routerLink="nuevo" class="btn btn-primary">+ Nuevo cliente</a>
   </header>
-  <input class="input buscador" placeholder="Buscar por nombre o documento…"
-    [value]="filtro()" (input)="filtro.set($any($event.target).value)" />
+
+  <div class="toolbar">
+    <input class="input buscador" placeholder="Buscar por DNI o nombres/apellidos en esta página…"
+      [value]="filtro()" (input)="filtro.set($any($event.target).value)" />
+    
+    <div class="selector-tamanio">
+      <label for="tamanioSelect">Mostrar:</label>
+      <select id="tamanioSelect" class="input" [value]="tamanio()" (change)="cambiarTamanio(+$any($event.target).value)">
+        <option [value]="5">5</option>
+        <option [value]="10">10</option>
+        <option [value]="20">20</option>
+      </select>
+    </div>
+  </div>
+
   @if (error()) {
     <div class="alerta">{{ error() }}</div>
   }
+
   @if (cargando()) {
     <p>Cargando clientes…</p>
   } @else {
     <table class="tabla">
       <thead>
-        <tr><th>ID</th><th>Nombre</th><th>Tipo Doc.</th><th>N° Doc.</th><th>Teléfono</th><th>Email</th><th>Estado</th><th>Acciones</th></tr>
+        <tr>
+          <th class="sortable" (click)="cambiarOrden('dni')">
+            DNI @if (ordenarPor() === 'dni') { {{ direccion() === 'asc' ? '▲' : '▼' }} }
+          </th>
+          <th class="sortable" (click)="cambiarOrden('apellidos')">
+            Apellidos y nombres @if (ordenarPor() === 'apellidos') { {{ direccion() === 'asc' ? '▲' : '▼' }} }
+          </th>
+          <th class="sortable" (click)="cambiarOrden('email')">
+            Correo @if (ordenarPor() === 'email') { {{ direccion() === 'asc' ? '▲' : '▼' }} }
+          </th>
+          <th>Teléfono</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
       </thead>
       <tbody>
         @for (c of filtrados(); track c.id) {
           <tr>
-            <td>{{ c.id }}</td>
-            <td>{{ c.nombre }}</td>
-            <td>{{ c.tipoDoc }}</td>
-            <td>{{ c.numDoc }}</td>
+            <td>{{ c.dni }}</td>
+            <td>{{ c.apellidos }}, {{ c.nombres }}</td>
+            <td>{{ c.email }}</td>
             <td>{{ c.telefono ?? '—' }}</td>
-            <td>{{ c.email ?? '—' }}</td>
             <td>
               <span class="badge" [class.inactivo]="!c.estado">{{ c.estado ? 'Activo' : 'Inactivo' }}</span>
             </td>
@@ -33,9 +58,22 @@
             </td>
           </tr>
         } @empty {
-          <tr><td colspan="8" class="vacio">No hay clientes registrados.</td></tr>
+          <tr><td colspan="6" class="vacio">No hay clientes registrados en esta página.</td></tr>
         }
       </tbody>
     </table>
+
+    <footer class="paginacion-bar">
+      <span>Página {{ pagina() + 1 }} de {{ totalPaginas() || 1 }} · {{ totalElementos() }} clientes</span>
+      <div class="paginacion-botones">
+        <button type="button" class="btn" [disabled]="pagina() === 0" (click)="paginaAnterior()">
+          Anterior
+        </button>
+        <button type="button" class="btn" [disabled]="ultima() || totalPaginas() === 0" (click)="paginaSiguiente()">
+          Siguiente
+        </button>
+      </div>
+    </footer>
   }
 </section>
+

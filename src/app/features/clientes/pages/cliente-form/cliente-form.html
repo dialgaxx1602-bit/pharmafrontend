@@ -1,56 +1,78 @@
 <section class="page">
   <h2>{{ esEdicion() ? 'Editar cliente' : 'Nuevo cliente' }}</h2>
+
   @if (error()) {
     <div class="alerta">{{ error() }}</div>
   }
+
   <form [formGroup]="form" (ngSubmit)="guardar()" class="card formulario">
-    <label>
-      Nombre Completo / Razón Social
-      <input class="input" formControlName="nombre" />
-    </label>
-    @if (form.controls.nombre.touched && form.controls.nombre.invalid) {
-      <small class="error">El nombre es obligatorio (mínimo 3 caracteres).</small>
-    }
-    @if (erroresServidor()['nombre']; as mensaje) {
-      <small class="error">{{ mensaje }}</small>
-    }
-
     <div class="grid-2">
       <label>
-        Tipo Documento
-        <select class="input" formControlName="tipoDoc">
-          <option value="DNI">DNI</option>
-          <option value="RUC">RUC</option>
-          <option value="CE">Carnet Extranjería</option>
-          <option value="PASAPORTE">Pasaporte</option>
-        </select>
+        DNI *
+        <input class="input" formControlName="dni" placeholder="8 dígitos" />
       </label>
-
       <label>
-        N° Documento
-        <input class="input" formControlName="numDoc" />
+        Email *
+        <input class="input" type="email" formControlName="email" placeholder="correo@ejemplo.com" />
       </label>
     </div>
-    @if (form.controls.numDoc.touched && form.controls.numDoc.invalid) {
-      <small class="error">El número de documento es obligatorio (8 a 15 caracteres).</small>
+    @if (form.controls.dni.touched && form.controls.dni.invalid) {
+      <small class="error">El DNI es obligatorio y debe tener exactamente 8 dígitos.</small>
     }
-    @if (erroresServidor()['numDoc']; as mensaje) {
+    @if (erroresServidor()['dni']; as mensaje) {
       <small class="error">{{ mensaje }}</small>
     }
-
-    <div class="grid-2">
-      <label>
-        Teléfono
-        <input class="input" formControlName="telefono" />
-      </label>
-
-      <label>
-        Email
-        <input class="input" type="email" formControlName="email" />
-      </label>
-    </div>
     @if (form.controls.email.touched && form.controls.email.invalid) {
-      <small class="error">Ingrese un correo electrónico válido.</small>
+      <small class="error">El email es obligatorio, máximo 150 caracteres y debe ser válido.</small>
+    }
+    @if (erroresServidor()['email']; as mensaje) {
+      <small class="error">{{ mensaje }}</small>
+    }
+
+    <div class="grid-2">
+      <label>
+        Nombres *
+        <input class="input" formControlName="nombres" placeholder="2 a 100 caracteres" />
+      </label>
+      <label>
+        Apellidos *
+        <input class="input" formControlName="apellidos" placeholder="2 a 100 caracteres" />
+      </label>
+    </div>
+    @if (form.controls.nombres.touched && form.controls.nombres.invalid) {
+      <small class="error">Los nombres son obligatorios (entre 2 y 100 caracteres).</small>
+    }
+    @if (erroresServidor()['nombres']; as mensaje) {
+      <small class="error">{{ mensaje }}</small>
+    }
+    @if (form.controls.apellidos.touched && form.controls.apellidos.invalid) {
+      <small class="error">Los apellidos son obligatorios (entre 2 y 100 caracteres).</small>
+    }
+    @if (erroresServidor()['apellidos']; as mensaje) {
+      <small class="error">{{ mensaje }}</small>
+    }
+
+    <div class="grid-2">
+      <label>
+        Teléfono (opcional)
+        <input class="input" formControlName="telefono" placeholder="9 dígitos si se ingresa" />
+      </label>
+      <label>
+        Dirección (opcional)
+        <input class="input" formControlName="direccion" placeholder="Máximo 250 caracteres" />
+      </label>
+    </div>
+    @if (form.controls.telefono.touched && form.controls.telefono.invalid) {
+      <small class="error">Si ingresa teléfono, debe tener exactamente 9 dígitos.</small>
+    }
+    @if (erroresServidor()['telefono']; as mensaje) {
+      <small class="error">{{ mensaje }}</small>
+    }
+    @if (form.controls.direccion.touched && form.controls.direccion.invalid) {
+      <small class="error">La dirección no debe exceder los 250 caracteres.</small>
+    }
+    @if (erroresServidor()['direccion']; as mensaje) {
+      <small class="error">{{ mensaje }}</small>
     }
 
     <label class="check">
@@ -65,3 +87,4 @@
     </div>
   </form>
 </section>
+

@@ -1,18 +1,23 @@
 export interface Cliente {
   id: number;
-  nombre: string;
-  numDoc: string;
-  tipoDoc: string;
+  dni: string;
+  nombres: string;
+  apellidos: string;
+  email: string;
   telefono: string | null;
-  email: string | null;
+  direccion: string | null;
   estado: boolean;
+  fechaCreacion: string;
+  fechaModificacion: string | null;
 }
 
 export interface ClienteRequest {
-  nombre: string;
-  numDoc: string;
-  tipoDoc: string;
+  dni: string;
+  nombres: string;
+  apellidos: string;
+  email: string;
   telefono: string | null;
-  email: string | null;
+  direccion: string | null;
   estado: boolean;
 }
+
